@@ -1,5 +1,13 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1794367361434,
+      "tag": "0000_crompton_trade_hub_schema",
+      "breakpoints": true
+    }
+  ]
 }
