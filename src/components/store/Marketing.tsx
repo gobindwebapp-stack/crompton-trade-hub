@@ -147,12 +147,12 @@ export function SponsoredAd({ ad, className }: { ad: Ad; className?: string }) {
   );
 }
 
-export function SectionTitle({ title, action }: { title: string; action?: { label: string; to: string; search?: Record<string, string> } }) {
+export function SectionTitle({ title, action }: { title: string; action?: { label: string; category?: string } }) {
   return (
     <div className="mb-3 flex items-end justify-between gap-2">
       <h2 className="text-lg font-extrabold sm:text-xl">{title}</h2>
       {action && (
-        <Link to={action.to} search={action.search} className="text-sm font-semibold text-primary hover:underline">
+        <Link to="/products" search={{ category: action.category }} className="text-sm font-semibold text-primary hover:underline">
           {action.label}
         </Link>
       )}
