@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Bot, Send, X, Sparkles, Loader2 } from "lucide-react";
 import { askAssistant } from "@/lib/assistant.functions";
-import { homeQuery, settingsQuery } from "@/lib/catalog.queries";
+import { productsQuery, settingsQuery } from "@/lib/catalog.queries";
 import { cleanText } from "@/lib/sanitize";
 import { cn } from "@/lib/utils";
 
@@ -18,9 +18,9 @@ const STARTERS = [
 
 export function AssistantWidget() {
   const { data: settings } = useQuery(settingsQuery);
-  const { data: home } = useQuery({ ...homeQuery, enabled: false });
   const ask = useServerFn(askAssistant);
   const [open, setOpen] = useState(false);
+  const { data: products = [] } = useQuery({ ...productsQuery(), enabled: open });
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -31,8 +31,6 @@ export function AssistantWidget() {
   }, [msgs, busy]);
 
   if (settings && !settings.assistant_enabled) return null;
-
-  const products = [...(home?.featured ?? []), ...(home?.latest ?? [])];
 
   async function send(text: string) {
     const content = cleanText(text, 1000);
@@ -89,7 +87,7 @@ export function AssistantWidget() {
             {msgs.map((m, i) => {
               const mentioned =
                 m.role === "assistant"
-                  ? products.filter((p, idx, arr) => m.content.includes(p.name) && arr.findIndex((x) => x.id === p.id) === idx).slice(0, 3)
+                  ? products.filter((p) => m.content.includes(p.name)).slice(0, 3)
                   : [];
               return (
                 <div key={i} className={cn("flex flex-col", m.role === "user" ? "items-end" : "items-start")}>
